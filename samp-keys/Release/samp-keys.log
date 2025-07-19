@@ -1,0 +1,12 @@
+﻿  pch.cpp
+  BitStream.cpp
+  CHooks.cpp
+  CKeyboard.cpp
+  CMessages.cpp
+  dllmain.cpp
+  Создание кода
+  11 of 165 functions ( 6.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  samp-keys.vcxproj -> C:\Users\swlm\source\repos\samp-keys\Release\samp-keys.dll
