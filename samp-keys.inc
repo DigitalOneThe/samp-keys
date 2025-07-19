@@ -5,11 +5,7 @@
 
 const PRESSED_KEY_PACKET = 200;
 
-stock OnKeyCallback(playerid, key_id) {
-    printf("Игрок: %d. Нажал клавишу: %d", playerid, key_id);
-    
-    return 1;
-}
+forward OnKeyCallback(playerid, key_id); // Можно объявить в Вашем моде
 
 ICustomRPC:PRESSED_KEY_PACKET(playerid, BitStream: bs) {
     new key_id = -1;
