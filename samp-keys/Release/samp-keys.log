@@ -1,12 +1,9 @@
 ﻿  pch.cpp
-  BitStream.cpp
-  CHooks.cpp
-  CKeyboard.cpp
-  CMessages.cpp
-  dllmain.cpp
-  Создание кода
-  11 of 165 functions ( 6.7%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
-  Создание кода завершено
-  samp-keys.vcxproj -> C:\Users\swlm\source\repos\samp-keys\Release\samp-keys.dll
+C:\Users\swlm\source\repos\samp-keys\samp-keys\Sync\SyncClient.hpp(70,20): error C2039: "InitKey": не является членом "CKeyboard".
+  (компиляция исходного файла "pch.cpp")
+      C:\Users\swlm\source\repos\samp-keys\samp-keys\CKeyboard.h(20,7):
+       см. объявление "CKeyboard"
+  
+C:\Users\swlm\source\repos\samp-keys\samp-keys\Sync\SyncClient.hpp(70,20): error C3861: InitKey: идентификатор не найден
+  (компиляция исходного файла "pch.cpp")
+  

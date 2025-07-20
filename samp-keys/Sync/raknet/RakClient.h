@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../BitStream.h"
+#include "BitStream.h"
 
 #define RAKNET_MAX_PACKET	256
 

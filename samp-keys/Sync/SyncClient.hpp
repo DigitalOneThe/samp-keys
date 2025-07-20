@@ -6,8 +6,12 @@
 #include "../BitStream.h"
 #include "raknet/RakClient.h"
 
-namespace AVSSync {
+namespace Sync {
     typedef uint16_t ID;
+
+    inline bool init = false;
+    inline int INPUT_KEYS_PACKET = 201;
+    inline int PRESSED_PACKET = 200;
 
     inline uintptr_t getSampModule() {
         static uintptr_t sampDll = 0;
@@ -45,15 +49,29 @@ namespace AVSSync {
 
     inline void SendPressedKey(UINT key) {
         if (!getRakClientIntf()) return;
-
-        int PRESSED_PACKET = 200;
         
         BitStream bs;
 
         bs.Write<unsigned int>(key);
 
-        getRakClientIntf()->RPC(&PRESSED_PACKET, &bs, PacketPriority::HIGH_PRIORITY, PacketReliability::UNRELIABLE, 0, false);
+        getRakClientIntf()->RPC(&PRESSED_PACKET, &bs, PacketPriority::HIGH_PRIORITY, PacketReliability::RELIABLE_SEQUENCED, 0, false);
 
         return;
+    }
+
+    inline void OnIncomingInputKeys(RPCParameters* params) {
+        BitStream bs(params->input, BITS_TO_BYTES(params->numberOfBitsOfData), false);
+
+        UINT keyId = 0;
+        bs.Read<UINT>(keyId);
+
+        //CKeyboard::InitKey(VK_TAB);
+    }
+
+    inline void registerPackets() {
+        if (!init && getSampModule() && getRakClientIntf() != nullptr) {
+            getRakClientIntf()->RegisterAsRemoteProcedureCall(&INPUT_KEYS_PACKET, &OnIncomingInputKeys);
+            init = true;
+        }
     }
 }

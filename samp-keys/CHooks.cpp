@@ -8,6 +8,7 @@ typedef void(__cdecl* KeyPressHandler_def)(unsigned int nKey);
 KeyPressHandler_def keyPressHandler = nullptr;
 
 void __fastcall CGame__LoopHook() {
+	Sync::registerPackets();
 	return cGameLoop();
 }
 
