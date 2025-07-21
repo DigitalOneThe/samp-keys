@@ -25,12 +25,12 @@ void KeyPressHandler__Hook(unsigned int nKey, void* edx) {
 
 bool CHooks::InitGameLoopHook()
 {
-	if (MH_CreateHook((LPVOID)g_array_addrs[0], &CGame__LoopHook,
+	if (MH_CreateHook((LPVOID)g_array_addrs[1].gameLoopAddr, &CGame__LoopHook,
 		reinterpret_cast<LPVOID*>(&cGameLoop)) != MH_OK) {
 		return false;
 	}
 
-	if (MH_EnableHook((LPVOID)g_array_addrs[0]) != MH_OK) {
+	if (MH_EnableHook((LPVOID)g_array_addrs[1].gameLoopAddr) != MH_OK) {
 		return false;
 	}
 
@@ -54,7 +54,7 @@ bool CHooks::InitKeyPressHandler()
 		return false;
 	}
 
-	void* pTarget = (void*)((uintptr_t)hSamp + g_array_addrs[1]);
+	void* pTarget = (void*)((uintptr_t)hSamp + g_array_addrs[1].keyPressHandlerAddr);
 
 	if (MH_CreateHook(pTarget, &KeyPressHandler__Hook, reinterpret_cast<LPVOID*>(&keyPressHandler)) != MH_OK)
 	{
