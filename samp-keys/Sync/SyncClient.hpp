@@ -29,22 +29,25 @@ namespace Sync {
                 entrypointOffset = ntheader->OptionalHeader.AddressOfEntryPoint;
             }
         }
+
         return entrypointOffset;
     }
 
     inline uintptr_t getSampNetGame() {
         auto samp_module = getSampModule();
         if (samp_module == 0) return 0;
-        if (getSampEntryPointOffset() != 0xCC4D0) return 0;
-        return *reinterpret_cast<uintptr_t*>(samp_module + 0x26E8DC);
+        //if (getSampEntryPointOffset() != 0xCC4D0) return 0;
+        return *reinterpret_cast<uintptr_t*>(samp_module + 0x2ACA24);
     }
 
     inline RakClientInterface* getRakClientIntf() {
         auto samp_module = getSampModule();
+        if (!samp_module) return nullptr;
+
         auto samp_netgame = getSampNetGame();
-        if (samp_netgame == 0) return nullptr;
-        return reinterpret_cast<RakClientInterface * (__thiscall*)(uintptr_t)>
-            (samp_module + 0x1A40)(samp_netgame);
+        if (!samp_netgame) return nullptr;
+
+        return reinterpret_cast<RakClientInterface*>(samp_netgame + 0x2C);
     }
 
     inline void SendPressedKey(UINT key) {
