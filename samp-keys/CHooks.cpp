@@ -54,7 +54,7 @@ bool CHooks::InitKeyPressHandler()
 		return false;
 	}
 
-	void* pTarget = (void*)((uintptr_t)hSamp + g_array_addrs[1].keyPressHandlerAddr);
+	void* pTarget = (void*)((uintptr_t)hSamp + g_array_addrs[3].keyPressHandlerAddr);
 
 	if (MH_CreateHook(pTarget, &KeyPressHandler__Hook, reinterpret_cast<LPVOID*>(&keyPressHandler)) != MH_OK)
 	{

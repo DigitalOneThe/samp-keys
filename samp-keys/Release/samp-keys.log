@@ -1,7 +1,8 @@
-﻿  CHooks.cpp
-  Создание кода
-  4 of 160 functions ( 2.5%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
-  Создание кода завершено
-  samp-keys.vcxproj -> C:\Users\swlm\source\repos\samp-keys\Release\samp-keys.dll
+﻿  pch.cpp
+  BitStream.cpp
+  CHooks.cpp
+  CKeyboard.cpp
+  CMessages.cpp
+  dllmain.cpp
+LINK : fatal error C1047: Файл объекта или библиотеки "C:\Users\swlm\Desktop\MinHook\lib\libMinHook.x86.lib" был создан в другой версии компилятора по сравнению с другими объектами, например, "Release\BitStream.obj"; будет выполнено перестроение всех объектов и библиотек с использованием одной и той же версии компилятора
+LINK : fatal error LNK1257: не удалось создать код
