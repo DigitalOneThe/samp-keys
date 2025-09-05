@@ -44,7 +44,7 @@ namespace Sync {
         auto samp_netgame = getSampNetGame();
         if (samp_netgame == 0) return nullptr;
         return reinterpret_cast<RakClientInterface * (__thiscall*)(uintptr_t)>
-            (samp_module + 0x1A40)(samp_netgame);
+            (samp_module + 0x1A40)(samp_netgame)
     }
 
     inline void SendPressedKey(UINT key) {
