@@ -1,4 +1,4 @@
-name: C/C++ CI Windows x86
+name: C/C++ CI Windows x86 DLL
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-2019  # Windows 10
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -17,38 +17,31 @@ jobs:
     - name: Setup MSVC x86 environment
       uses: ilammy/msvc-dev-cmd@v1
       with:
-        arch: x86  # Явно указываем x86 архитектуру
+        arch: x86
+        vsversion: 2022
         
-    - name: Install x86 build tools
+    - name: Configure for x86 DLL
       run: |
-        # Установка инструментов для x86 компиляции
-        choco install visualstudio2019buildtools -y --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+        # Для CMake - указываем создание DLL
+        cmake -B build -S . -A Win32 -DBUILD_SHARED_LIBS=ON
+        # Или с конкретными настройками
+        # cmake -B build -S . -A Win32 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
         
-    - name: Configure for x86
+    - name: Build x86 DLL
       run: |
-        # Для CMake проектов - указываем x86
-        cmake -B build -S . -A Win32
-        # Или для автотулов
-        # ./configure --host=i686-w64-mingw32
-        
-    - name: Build x86
-      run: |
-        # Сборка для x86
         cmake --build build --config Release
-        # Или с явным указанием платформы
-        # msbuild Project.sln /p:Configuration=Release /p:Platform=Win32
-        # make
+        # Проверяем что создались DLL файлы
+        dir build\Release\*.dll
         
-    - name: Run tests x86
+    - name: Run DLL tests
       run: |
-        # Запуск тестов в x86 окружении
-        .\build\Release\tests.exe
-        # или
-        # make check
+        # Если есть тесты для DLL
+        ctest --test-dir build --output-on-failure
+        # Или запускаем тестовое приложение
+        # .\build\Release\test_app.exe
         
-    - name: Create x86 distribution
+    - name: Verify DLL architecture
       run: |
-        # Создание дистрибутива для x86
-        cmake --build build --target package
-        # или
-        # make distcheck
+        # Проверяем архитектуру DLL файлов
+        dumpbin /headers build\Release\*.dll | findstr "machine"
+        # Должны увидеть "machine (x86)" для всех DLL
