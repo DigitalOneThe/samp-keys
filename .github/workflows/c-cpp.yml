@@ -1,4 +1,4 @@
-name: C/C++ CI Windows x86 DLL
+name: C/C++ CI Windows x86 DLL MSVC
 
 on:
   push:
@@ -14,34 +14,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Install make for Windows
+      run: |
+        choco install make -y
+        
     - name: Setup MSVC x86 environment
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x86
-        vsversion: 2022
         
-    - name: Configure for x86 DLL
+    - name: configure
       run: |
-        # Для CMake - указываем создание DLL
-        cmake -B build -S . -A Win32 -DBUILD_SHARED_LIBS=ON
-        # Или с конкретными настройками
-        # cmake -B build -S . -A Win32 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
+        ./configure --enable-shared
         
-    - name: Build x86 DLL
-      run: |
-        cmake --build build --config Release
-        # Проверяем что создались DLL файлы
-        dir build\Release\*.dll
+    - name: make
+      run: make
         
-    - name: Run DLL tests
-      run: |
-        # Если есть тесты для DLL
-        ctest --test-dir build --output-on-failure
-        # Или запускаем тестовое приложение
-        # .\build\Release\test_app.exe
+    - name: make check
+      run: make check
         
-    - name: Verify DLL architecture
+    - name: make distcheck
+      run: make distcheck
+        
+    - name: List created files
       run: |
-        # Проверяем архитектуру DLL файлов
-        dumpbin /headers build\Release\*.dll | findstr "machine"
-        # Должны увидеть "machine (x86)" для всех DLL
+        dir /s
+        if exist "*.dll" (
+          echo "=== DLL Architecture Check ==="
+          for /r %%i in (*.dll) do (
+            echo File: %%i
+            dumpbin /headers "%%i" | findstr "machine"
+          )
+        )
