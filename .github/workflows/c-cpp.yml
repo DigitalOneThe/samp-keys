@@ -13,14 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Create CMakeLists.txt
-      run: |
-        # Создаем CMakeLists.txt если его нет
-        if not exist "CMakeLists.txt" (
-          echo Creating CMakeLists.txt...
-          echo @^
-      
+        
     - name: Show project structure
       run: |
         echo "=== Project Structure ==="
