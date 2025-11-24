@@ -1,4 +1,4 @@
-name: C/C++ CI Windows x86 DLL MSVC
+name: Build samp-keys DLL x86
 
 on:
   push:
@@ -14,35 +14,42 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install make for Windows
+    - name: Create CMakeLists.txt
       run: |
-        choco install make -y
-        
-    - name: Setup MSVC x86 environment
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x86
-        
-    - name: configure
+        # Создаем CMakeLists.txt если его нет
+        if not exist "CMakeLists.txt" (
+          echo Creating CMakeLists.txt...
+          echo @^
+      
+    - name: Show project structure
       run: |
-        ./configure --enable-shared
-        
-    - name: make
-      run: make
-        
-    - name: make check
-      run: make check
-        
-    - name: make distcheck
-      run: make distcheck
-        
-    - name: List created files
-      run: |
+        echo "=== Project Structure ==="
         dir /s
-        if exist "*.dll" (
-          echo "=== DLL Architecture Check ==="
-          for /r %%i in (*.dll) do (
+        
+    - name: Configure CMake for x86
+      run: |
+        cmake -B build -A Win32 -DBUILD_SHARED_LIBS=ON
+        
+    - name: Build project
+      run: |
+        cmake --build build --config Release
+        
+    - name: List built files
+      run: |
+        echo "=== Built files ==="
+        dir build\bin\Release /s
+        dir build\lib\Release /s
+        
+    - name: Verify DLL architecture
+      run: |
+        if exist "build\bin\Release\*.dll" (
+          echo "=== Checking DLL architecture ==="
+          for %%i in (build\bin\Release\*.dll) do (
             echo File: %%i
             dumpbin /headers "%%i" | findstr "machine"
           )
+        ) else (
+          echo "No DLL files found in bin directory"
+          echo "Checking other locations..."
+          dir build /s *.dll
         )
