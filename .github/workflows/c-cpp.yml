@@ -14,15 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
         
-    - name: Show project structure
-      run: |
-        echo "=== Project Structure ==="
-        dir
-        echo "=== Sync folder ==="
-        dir Sync
-        echo "=== Sync/rakclient folder ==="
-        dir Sync/rakclient
-        
     - name: Configure CMake for x86
       run: |
         cmake -B build -A Win32 -DBUILD_SHARED_LIBS=ON
@@ -31,26 +22,33 @@ jobs:
       run: |
         cmake --build build --config Release
         
-    - name: List built files
+    - name: Check build results
+      shell: cmd
       run: |
-        echo "=== Built files ==="
-        if exist "build\bin\Release" (
-            dir build\bin\Release
-        )
-        if exist "build\lib\Release" (
-            dir build\lib\Release
-        )
+        echo "=== Checking all created files ==="
+        dir build /s
         
     - name: Verify DLL architecture
+      shell: cmd
       run: |
-        if exist "build\bin\Release\*.dll" (
+        if exist "build\*.dll" (
           echo "=== Checking DLL architecture ==="
-          for /r %%i in (build\bin\Release\*.dll) do (
+          for %%i in (build\*.dll) do (
             echo File: %%i
             dumpbin /headers "%%i" | findstr "machine"
           )
-        ) else (
-          echo "No DLL files found in bin/Release directory"
-          echo "=== Checking all build directories ==="
-          dir build /s *.dll
+        )
+        if exist "build\bin\*.dll" (
+          echo "=== Checking DLL architecture in bin ==="
+          for %%i in (build\bin\*.dll) do (
+            echo File: %%i
+            dumpbin /headers "%%i" | findstr "machine"
+          )
+        )
+        if exist "build\Release\*.dll" (
+          echo "=== Checking DLL architecture in Release ==="
+          for %%i in (build\Release\*.dll) do (
+            echo File: %%i
+            dumpbin /headers "%%i" | findstr "machine"
+          )
         )
