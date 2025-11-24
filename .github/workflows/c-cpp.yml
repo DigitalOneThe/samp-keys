@@ -1,0 +1,54 @@
+name: C/C++ CI Windows x86
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-2019  # Windows 10
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup MSVC x86 environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x86  # Явно указываем x86 архитектуру
+        
+    - name: Install x86 build tools
+      run: |
+        # Установка инструментов для x86 компиляции
+        choco install visualstudio2019buildtools -y --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+        
+    - name: Configure for x86
+      run: |
+        # Для CMake проектов - указываем x86
+        cmake -B build -S . -A Win32
+        # Или для автотулов
+        # ./configure --host=i686-w64-mingw32
+        
+    - name: Build x86
+      run: |
+        # Сборка для x86
+        cmake --build build --config Release
+        # Или с явным указанием платформы
+        # msbuild Project.sln /p:Configuration=Release /p:Platform=Win32
+        # make
+        
+    - name: Run tests x86
+      run: |
+        # Запуск тестов в x86 окружении
+        .\build\Release\tests.exe
+        # или
+        # make check
+        
+    - name: Create x86 distribution
+      run: |
+        # Создание дистрибутива для x86
+        cmake --build build --target package
+        # или
+        # make distcheck
