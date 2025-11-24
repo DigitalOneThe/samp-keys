@@ -1,4 +1,4 @@
-name: Build samp-keys DLL x86
+name: Build samp-keys DLL x86 with MinHook
 
 on:
   push:
@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive  # Важно для подмодулей!
         
     - name: Configure CMake for x86
       run: |
@@ -34,20 +36,6 @@ jobs:
         if exist "build\*.dll" (
           echo "=== Checking DLL architecture ==="
           for %%i in (build\*.dll) do (
-            echo File: %%i
-            dumpbin /headers "%%i" | findstr "machine"
-          )
-        )
-        if exist "build\bin\*.dll" (
-          echo "=== Checking DLL architecture in bin ==="
-          for %%i in (build\bin\*.dll) do (
-            echo File: %%i
-            dumpbin /headers "%%i" | findstr "machine"
-          )
-        )
-        if exist "build\Release\*.dll" (
-          echo "=== Checking DLL architecture in Release ==="
-          for %%i in (build\Release\*.dll) do (
             echo File: %%i
             dumpbin /headers "%%i" | findstr "machine"
           )
