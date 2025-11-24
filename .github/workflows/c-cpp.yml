@@ -17,7 +17,11 @@ jobs:
     - name: Show project structure
       run: |
         echo "=== Project Structure ==="
-        dir /s
+        dir
+        echo "=== Sync folder ==="
+        dir Sync
+        echo "=== Sync/rakclient folder ==="
+        dir Sync/rakclient
         
     - name: Configure CMake for x86
       run: |
@@ -30,19 +34,23 @@ jobs:
     - name: List built files
       run: |
         echo "=== Built files ==="
-        dir build\bin\Release /s
-        dir build\lib\Release /s
+        if exist "build\bin\Release" (
+            dir build\bin\Release
+        )
+        if exist "build\lib\Release" (
+            dir build\lib\Release
+        )
         
     - name: Verify DLL architecture
       run: |
         if exist "build\bin\Release\*.dll" (
           echo "=== Checking DLL architecture ==="
-          for %%i in (build\bin\Release\*.dll) do (
+          for /r %%i in (build\bin\Release\*.dll) do (
             echo File: %%i
             dumpbin /headers "%%i" | findstr "machine"
           )
         ) else (
-          echo "No DLL files found in bin directory"
-          echo "Checking other locations..."
+          echo "No DLL files found in bin/Release directory"
+          echo "=== Checking all build directories ==="
           dir build /s *.dll
         )
