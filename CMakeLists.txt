@@ -5,7 +5,7 @@ project(samp-keys VERSION 1.0.0 LANGUAGES C CXX)
 set(BUILD_SHARED_LIBS ON)
 
 # Настройка стандартов C++
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Включить все предупреждения
@@ -16,16 +16,16 @@ else()
 endif()
 
 # Исходные файлы из корневой директории
-file(GLOB ROOT_SOURCES "*.cpp")
-file(GLOB ROOT_HEADERS "*.h")
+file(GLOB ROOT_SOURCES "samp-keys/*.cpp")
+file(GLOB ROOT_HEADERS "samp-keys/*.h")
 
 # Исходные файлы из папки Sync (которая в корне)
-file(GLOB SYNC_SOURCES "Sync/*.cpp")
-file(GLOB SYNC_HEADERS "Sync/*.hpp")
+file(GLOB SYNC_SOURCES "samp-keys/Sync/*.cpp")
+file(GLOB SYNC_HEADERS "samp-keys/Sync/*.hpp")
 
 # Исходные файлы из папки Sync/rakclient
-file(GLOB RAKCLIENT_SOURCES "Sync/rakclient/*.cpp")
-file(GLOB RAKCLIENT_HEADERS "Sync/rakclient/*.h")
+file(GLOB RAKCLIENT_SOURCES "samp-keys/Sync/rakclient/*.cpp")
+file(GLOB RAKCLIENT_HEADERS "samp-keys/Sync/rakclient/*.h")
 
 # Объединяем все исходные файлы
 set(ALL_SOURCES 
