@@ -17,7 +17,7 @@
 #include <MinHook.h>
 #include <array>
 #include "CHooks.h"
-#include "memwrapper/memwrapper.h"
+#include "memwrapper.h"
 #include "Sync/SyncClient.hpp"
 
 #endif //PCH_H
