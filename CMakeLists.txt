@@ -10,15 +10,14 @@ include(FetchContent)
 FetchContent_Declare(
     minhook
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
-    GIT_TAG        origin/master
+    GIT_TAG        master
 )
 FetchContent_Declare(
     memwrapper
     GIT_REPOSITORY https://github.com/The-Musaigen/memwrapper.git
-    GIT_TAG        origin/master
+    GIT_TAG        master
 )
-FetchContent_MakeAvailable(minhook)
-FetchContent_MakeAvailable(memwrapper)
+FetchContent_MakeAvailable(minhook memwrapper)
 
 if(MSVC)
     add_compile_options(/W4)
