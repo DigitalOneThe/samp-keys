@@ -7,12 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
+# MinHook
 FetchContent_Declare(
     minhook
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
     GIT_TAG        master
 )
 
+# Memwrapper
 FetchContent_Declare(
     memwrapper
     GIT_REPOSITORY https://github.com/The-Musaigen/memwrapper.git
@@ -27,19 +29,51 @@ else()
     add_compile_options(-Wall -Wextra)
 endif()
 
-file(GLOB_RECURSE SOURCES "*.cpp" "*.c")
-file(GLOB_RECURSE HEADERS "*.h" "*.hpp")
+# Ищем только ВАШИ исходные файлы, исключая папки зависимостей
+set(MY_SOURCE_DIRS 
+    "."
+    "Sync" 
+    "Sync/rakclient"
+)
 
-set(ALL_SOURCES ${SOURCES})
+# Собираем список исходных файлов вручную для каждого каталога
+set(ALL_SOURCES "")
+
+foreach(DIR ${MY_SOURCE_DIRS})
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${DIR})
+        file(GLOB DIR_SOURCES 
+            "${DIR}/*.cpp"
+            "${DIR}/*.c"
+            "${DIR}/*.cxx"
+            "${DIR}/*.cc"
+        )
+        list(APPEND ALL_SOURCES ${DIR_SOURCES})
+    endif()
+endforeach()
+
+# Альтернативный вариант - явное перечисление файлов
+# set(ALL_SOURCES
+#     samp-keys/BitStream.cpp
+#     samp-keys/CHooks.cpp
+#     samp-keys/CKeyboard.cpp
+#     samp-keys/CMessages.cpp
+#     samp-keys/dllmain.cpp
+#     samp-keys/pch.cpp
+#     # Добавьте другие ваши файлы...
+# )
 
 if(NOT ALL_SOURCES)
-    message(FATAL_ERROR "No source files found!")
+    message(FATAL_ERROR "No source files found in project directories!")
 endif()
 
-message(STATUS "Found source files: ${ALL_SOURCES}")
+message(STATUS "Found project source files:")
+foreach(SRC ${ALL_SOURCES})
+    message(STATUS "  ${SRC}")
+endforeach()
 
 add_library(samp-keys SHARED ${ALL_SOURCES})
 
+# Линкуем библиотеки
 target_link_libraries(samp-keys PRIVATE minhook memwrapper)
 
 if(WIN32)
@@ -52,8 +86,12 @@ if(WIN32)
     )
 endif()
 
+# Включаем директории
 target_include_directories(samp-keys PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/samp-keys  # Если ваши файлы в папке samp-keys
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sync
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sync/rakclient
     ${minhook_SOURCE_DIR}/include
     ${memwrapper_SOURCE_DIR}/include
 )
