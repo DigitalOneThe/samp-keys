@@ -31,6 +31,7 @@ endif()
 
 # Ищем только ВАШИ исходные файлы, исключая папки зависимостей
 set(MY_SOURCE_DIRS 
+    "samp-keys"
     "."
     "Sync" 
     "Sync/rakclient"
