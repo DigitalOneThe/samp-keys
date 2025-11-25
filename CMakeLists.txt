@@ -5,17 +5,17 @@ set(BUILD_SHARED_LIBS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Добавляем MinHook как подмодуль или скачиваем
+# Добавляем MinHook и memwrapper
 include(FetchContent)
 FetchContent_Declare(
     minhook
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
-    GIT_TAG        master
+    GIT_TAG        master  # Исправлено с origin/master на master
 )
 FetchContent_Declare(
     memwrapper
     GIT_REPOSITORY https://github.com/The-Musaigen/memwrapper.git
-    GIT_TAG        master
+    GIT_TAG        master  # Исправлено с origin/master на master
 )
 FetchContent_MakeAvailable(minhook memwrapper)
 
@@ -40,8 +40,8 @@ message(STATUS "Found source files: ${ALL_SOURCES}")
 
 add_library(samp-keys SHARED ${ALL_SOURCES})
 
-# Линкуем MinHook к нашей библиотеке
-target_link_libraries(samp-keys PRIVATE minhook)
+# Линкуем библиотеки к нашей библиотеке
+target_link_libraries(samp-keys PRIVATE minhook memwrapper)
 
 if(WIN32)
     set_target_properties(samp-keys PROPERTIES
@@ -53,10 +53,11 @@ if(WIN32)
     )
 endif()
 
-# Включаем директории MinHook и наши
+# Включаем директории библиотек и наши
 target_include_directories(samp-keys PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${minhook_SOURCE_DIR}/include  # Директория с MinHook.h
+    ${minhook_SOURCE_DIR}/include
+    ${memwrapper_SOURCE_DIR}/include  # Добавляем include директорию memwrapper
 )
 
 set_target_properties(samp-keys PROPERTIES
