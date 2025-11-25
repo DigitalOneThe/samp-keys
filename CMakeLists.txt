@@ -12,7 +12,13 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
     GIT_TAG        origin/master
 )
+FetchContent_Declare(
+    memwrapper
+    GIT_REPOSITORY https://github.com/The-Musaigen/memwrapper.git
+    GIT_TAG        origin/master
+)
 FetchContent_MakeAvailable(minhook)
+FetchContent_MakeAvailable(memwrapper)
 
 if(MSVC)
     add_compile_options(/W4)
