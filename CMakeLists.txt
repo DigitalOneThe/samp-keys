@@ -95,7 +95,7 @@ target_include_directories(samp-keys PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Sync
     ${CMAKE_CURRENT_SOURCE_DIR}/Sync/rakclient
     ${minhook_SOURCE_DIR}/include
-    ${memwrapper_SOURCE_DIR}/include
+    ${memwrapper_SOURCE_DIR}/memwrapper
 )
 
 set_target_properties(samp-keys PROPERTIES
