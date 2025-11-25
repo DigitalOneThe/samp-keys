@@ -5,18 +5,19 @@ set(BUILD_SHARED_LIBS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Добавляем MinHook и memwrapper
 include(FetchContent)
+
 FetchContent_Declare(
     minhook
     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
-    GIT_TAG        master  # Исправлено с origin/master на master
+    GIT_TAG        master
 )
+
 FetchContent_Declare(
     memwrapper
     GIT_REPOSITORY https://github.com/The-Musaigen/memwrapper.git
-    GIT_TAG        master  # Исправлено с origin/master на master
 )
+
 FetchContent_MakeAvailable(minhook memwrapper)
 
 if(MSVC)
@@ -25,11 +26,9 @@ else()
     add_compile_options(-Wall -Wextra)
 endif()
 
-# Ищем все исходные файлы рекурсивно
 file(GLOB_RECURSE SOURCES "*.cpp" "*.c")
 file(GLOB_RECURSE HEADERS "*.h" "*.hpp")
 
-# Фильтруем только исходные файлы
 set(ALL_SOURCES ${SOURCES})
 
 if(NOT ALL_SOURCES)
@@ -40,7 +39,6 @@ message(STATUS "Found source files: ${ALL_SOURCES}")
 
 add_library(samp-keys SHARED ${ALL_SOURCES})
 
-# Линкуем библиотеки к нашей библиотеке
 target_link_libraries(samp-keys PRIVATE minhook memwrapper)
 
 if(WIN32)
@@ -53,11 +51,10 @@ if(WIN32)
     )
 endif()
 
-# Включаем директории библиотек и наши
 target_include_directories(samp-keys PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${minhook_SOURCE_DIR}/include
-    ${memwrapper_SOURCE_DIR}/include  # Добавляем include директорию memwrapper
+    ${memwrapper_SOURCE_DIR}/include
 )
 
 set_target_properties(samp-keys PROPERTIES
