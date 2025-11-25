@@ -47,6 +47,7 @@ foreach(DIR ${MY_SOURCE_DIRS})
             "${DIR}/*.c"
             "${DIR}/*.cxx"
             "${DIR}/*.cc"
+            "${DIR}/*.h"
         )
         list(APPEND ALL_SOURCES ${DIR_SOURCES})
     endif()
